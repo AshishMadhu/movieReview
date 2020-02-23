@@ -12,4 +12,5 @@ This is a Django application, used to upload movie reviews
 3. Start **Elasticsearch server**
 4. Start **Redis server**
 5. Start celery worker `celery -A main worker -l info --pool=solo`
-6. Start our server `py manage.py runserver`
+6. Run migrations
+7. Start our server `py manage.py runserver`
