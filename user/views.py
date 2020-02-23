@@ -2,9 +2,15 @@ from . import mixins
 from . models import Profile
 from django.views import generic
 from . forms import UserRegisterForm
+from django.shortcuts import reverse
 from django.contrib.auth.models import User
+from django.contrib.auth import views as auth_views
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
+
+class LoginView(auth_views.LoginView):
+    def get_success_url(self):
+        return reverse('user:profile', kwargs = { 'username' : self.request.user.username})
 
 class RegisterView(mixins.RegisterViewMixin, generic.CreateView):
     template_name = 'user/register.html'
