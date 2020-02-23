@@ -1,0 +1,16 @@
+
+*To run the celery task use "--pool=solo" flag 
+ex:
+    celery -A main worker --loglevel=info --pool=solo
+
+
+*Add a username to  the LoginView get_success_url's resolve_url
+
+########
+
+    def get_success_url(self):
+        url = self.get_redirect_url()
+        return url or resolve_url(settings.LOGIN_REDIRECT_URL, username = self.request.user.usernam
+########
+
+* Change django's User model's email field unique = True

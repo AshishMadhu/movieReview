@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}
+{{ object }} - Manage
+{% endblock title %}
+{% block body %}
+{% include 'common/detail.html' %}
+{% if object.comment_set.all %}
+{% include 'common/comment_list.html' %}
+{% endif %}
+{% include 'common/post_comment.html' %}
+{% endblock body %}
+

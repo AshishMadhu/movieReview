@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}
+Movie List
+{% endblock title %}
+{% block body %}
+<h1>Read and Write Your Thoughts:</h1>
+{% for movie in movie_list %}
+{% include 'common/detail.html' with object=movie list_view=True %}
+{% empty %}
+<h2>There is no movie to show!!!!</h2>
+{% endfor %}
+{% block pagination %}
+{{ block.super }}
+{% endblock pagination %}
+{% endblock body %}

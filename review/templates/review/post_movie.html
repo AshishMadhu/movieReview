@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}
+Post a Movie
+{% endblock title %}
+{% block body %}
+
+<h1>Post the leatest Movie</h1>
+<hr class="wave">
+
+{% if preview %}
+<div class="box preview-box">
+    <h3>Preview:</h3>
+    {% include 'common/detail.html' with object=preview %}
+</div>
+{% endif %}
+
+{% if preview %}
+<div class="box preview-box">
+    <h3>Edit Here:</h3>
+    {% endif %}
+    <form action="" method="post" enctype="multipart/form-data" class="my-ajax-form col-sm-12 col-md-9"
+        data-url=" {{ request.build_absolute_uri | safe }} ">
+        {% csrf_token %}
+        {{ form | crispy }}
+        <button type="submit" name="action" value="preview" class="btn btn-success">Preview</button>
+        <button type="submit" name="action" value="save" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+
+{% endblock body %}
+{% block script %}
+<script>
+    function previewFile() {
+        var preview = document.querySelector('img');
+        var file = document.querySelector('input[type=file]').files[0];
+        var reader = new FileReader();
+
+        reader.onloadend = function () {
+            preview.src = reader.result;
+        }
+
+        if (file) {
+            reader.readAsDataURL(file);
+        } else {
+            preview.src = "";
+        }
+    }
+</script>
+{% endblock script %}

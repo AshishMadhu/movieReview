@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}
+{{ user }} Reviews
+{% endblock title %}
+{% block body %}
+<h1>Movie Reviews Written by {{ user.username }}: </h1>
+<hr>
+{% for object in movie_list %}
+{% include 'common/detail.html' with object=object list_view=True %}
+{% empty %}
+<h2 style="color: chocolate;">No Reviews written:</h2>
+{% endfor %}
+{% block pagination %}
+{{ block.super }}
+{% endblock pagination %}
+{% endblock body %}

@@ -1,0 +1,11 @@
+{% load crispy_forms_tags %}
+<h2>Post Your comment:</h2>
+<div class="row box preview-box">
+    <div class="col-md-9">
+        <form action="{% url 'review:postComment' pk=object.id  %}" method="post">
+            {% csrf_token %}
+            {{ comment_form | crispy}}
+            <button type="submit" class="btn btn-primary" name="action" value="save">Submit</button>
+        </form>
+    </div>
+</div>

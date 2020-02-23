@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}
+Update Your profile
+{% endblock title %}
+{% block body %}
+<h1>Update Your Profile:</h1>
+<form method="POST" enctype="multipart/form-data" class = 'col-md-7'>
+    {% csrf_token %}
+    <fieldset class="form-group">
+        <legend class="border-bottom mb-4">Profile Info</legend>
+        {{ u_form|crispy }}
+        {{ p_form|crispy }}
+    </fieldset>
+    <div class="form-group">
+        <button class="btn btn-outline-info" type="submit">Update</button>
+    </div>
+</form>
+{% endblock body %}

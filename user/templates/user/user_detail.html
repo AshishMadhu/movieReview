@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load markdownify %}
+{% block title %}
+Profile
+{% endblock title %}
+{% block body %}
+<div class="row">
+    <div class="user-image col-md-3 col-sm-4 box preview-box">
+        <div class="rounded">
+            {% if user == current_user %}
+            {% if user.profile.img == 'img.jpg' %}
+            <p style="font-weight: bold;">Upload an Image:</p>
+            <form id='myForm' enctype="multipart/form-data" action="{% url 'user:updateProfileImage' %}" method="post"
+                class="box" style="margin-bottom: 5px;">
+                {# for field in p_form #}
+                {% if field.errors %}
+                <ul>
+                    {% for error in field.errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                {% csrf_token %}
+                {{ field }}
+                {# endfor #}
+                {% csrf_token %}
+                {{ p_form }}
+            </form>
+            {% endif %}
+            {% endif %}
+            <img src=" {{ object.profile.img.url }} " alt="Profile pic">
+        </div>
+    </div>
+    <div class="col-md-9 col-sm-8">
+        <div class="row" style="margin-left: auto;">
+            <div class="col-md-12">
+                <div class="user-details box preview-box">
+                    <div class="box user-name" style="display: flex; justify-content: space-between;">
+                        <div>
+                            <b>User Name: </b>{{ object.username }}
+                        </div>
+                        <div class=" " style="padding: 0;">
+                            {% if current_user == user %}
+                            <small><b><a href="{{ url }}" class="btn btn-outline-danger"> Edit </a></b></small>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <p> <b>Email: </b>{{ user.email }} </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 user-action">
+            {% if current_user == user %}
+            <a href="{% url 'review:post' %}" class="btn btn-primary">Post a Movie Review</a>
+            <a href="{% url 'user:subscriberList' username=current_user.username %}" class="btn btn-danger">Subscribers {{ current_user.profile.notify.count }}</a>
+            {% else %}
+            <a href="{% url 'user:notify' username=user.username %}"
+                class="btn btn-{% if subscribe %}success{% else %}danger{% endif %} subscribe">
+                {% if not subscribe %}
+                <span class="notify" onmouseover="show_notify()" onmouseout="hide_notify()">
+                    Notify
+                    <span style="color: blanchedalmond; font-weight: bold;">
+                        {% if user.profile.notify.count %}
+                        {{ user.profile.notify.count }}
+                        {% endif %}
+                    </span>
+                    {% else %}
+                    <span>
+                        Subscribed
+                        {% if user.profile.notify.count %}
+                        {{ user.profile.notify.count }}
+                        {% endif %}
+                    </span>
+                </span>
+                {% endif %}
+            </a>
+            <span class="notify-help">Subscribe to his reviews</span>
+            {% endif %}
+        </div>
+    </div>
+</div>
+</div>
+<hr>
+<div class="row">
+    <div class="col-md-3" style="margin-left: auto;">
+        <h2>Your Reviews:</h2>
+    </div>
+    <div class="col-md-8" style="margin-right: auto;">
+        <div class="box preview-box">
+            {% if user.movie_set %}
+            {% for movie in user.movie_set.all %}
+            {% include 'common/detail.html' with object=movie list_view=True %}
+            {% empty %}
+            <h2>You don't have uploaded any!</h2>
+            {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+    {% if current_user %}
+    <button id="message" onclick="toggleMessage()">Messages</button>
+    <div class="message-popup" id='popup-message'>
+        {% for message in user_messages %}
+        <div class="message-widget">
+            <div class="h4">
+                <h4>{{ message.message.user }}'s new Review</h4>
+                <hr>
+            </div>
+            <div class="body">
+                <b>Movie:</b> {{ message.message.movie.name|truncatewords_html:10 }}
+                <p>
+                    <a href="{% url 'user:seen' pk=message.id %}"
+                        class="btn btn-{% if message.seen %}primary{% else %}success{% endif %}">
+                        {% if message.seen %}Seen{% else %}See{% endif %}
+                    </a>
+                </p>
+            </div>
+        </div>
+        {% empty %}
+        <p>Is empty</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{% block script %}
+<script>
+
+    function toggleMessage() {
+        popup_message = document.getElementById('popup-message').style.display;
+        if (popup_message == '' || popup_message == 'none') {
+            document.getElementById('popup-message').style.display = 'block';
+        } else {
+            document.getElementById('popup-message').style.display = 'none';
+        }
+    }
+
+    function upload() {
+        var reader = new FileReader();
+        var file = document.querySelector('input[type=file]').files[0];
+        reader.onloadend = function () {
+            document.getElementById('myForm').submit();
+        }
+        if (file)
+            reader.readAsDataURL(file);
+    }
+
+    function show_notify() {
+        ele = document.getElementsByClassName('notify-help')[0].style.visibility = 'visible';
+    }
+
+    function hide_notify() {
+        ele = document.getElementsByClassName('notify-help')[0].style.visibility = 'hidden';
+    }
+
+</script>
+{% endblock script %}
+{% endblock body %}

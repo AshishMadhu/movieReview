@@ -1,0 +1,52 @@
+{% load markdownify %}
+
+<h2>Comments</h2>
+<div class="row">
+    {% for comment in object.comment_set.all %}
+    <div class="col-md-4 box user-box">
+        <div class="div box preview-box">
+            {% if comment.user.profile %}
+            <img src=" {{comment.user.profile.img.url}} " alt="" class="rounded profile-pic">
+            {% else %}
+            <img src=" {{object.poster.url}} " alt="" class="rounded profile-pic">
+            {% endif %}
+            <a href="{% url 'user:profile' comment.user.username %}"> {{ comment.user }} </a>
+            <small>posted on: {{ comment.date }} </small>
+            <div style="display: flex; justify-content: space-evenly;">
+                <a href="{% url 'review:commentLike' id=comment.id %}" class="btn btn-like" name="action" value="like">
+                    👍
+                    <p><small> {{ comment.likes.count }} </small></p>
+                </a>
+                <a href="{% url 'review:commentDislike' id=comment.id %}" class="btn btn-like" name="action"
+                    value="like">
+                    👎
+                    <p><small> {{ comment.dislikes.count }} </small></p>
+                </a>
+                <a href="{% url 'review:commentReport' id=comment.id %}" class="btn btn-like" name="action"
+                    value="report">
+                    Report
+                    <p><small> {{ comment.reports.count }} </small></p>
+                </a>
+                {% if user == comment.user %}
+                <div style="display: flex; flex-direction: column;">
+                    <small>
+                        <a class="btn btn-small btn-update"
+                            href="{% url 'review:updateComment' pk=comment.id %}">Update</a>
+                    </small>
+                    <small>
+                        <a href="{% url 'review:deleteComment' pk=comment.id %}" type="submit"
+                            class="btn btn-small btn-delete">Delete</a>
+
+                    </small>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+    <div class="col-md-8 box comment-box">
+
+        {{ comment.comment | markdownify}}
+    </div>
+    {% endfor %}
+</div>

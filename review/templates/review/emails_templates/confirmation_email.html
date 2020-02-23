@@ -1,0 +1,35 @@
+{% extends 'review/emails_templates/base.html' %}
+{% block body %}
+<div style="width: 50%; border-radius: 50%; border-color: grey; border-width: 2px; margin: auto;">
+    <div style="background-color: #343A40; width: 100%; text-align: center; color: honeydew;">
+        <h1>movie<span style="color: red;">R</span>eview </h1>
+    </div>
+    <div style="font-size: large; height: 100px;">
+        This is an email from movieReview site. You recently created an accout and to activate your account click the
+        button.
+        <div style="text-align: center;">
+            <a href="{{ confirmation_link }}"
+                style="
+                display: inline-block;
+                text-decoration: none;
+                font-weight: 400;
+                color: #fff;
+                text-align: center;
+                vertical-align: middle;
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+                background-color: transparent;
+                border: 1px solid transparent;
+                padding: .375rem .75rem;
+                font-size: 1rem;
+                line-height: 1.5;
+                border-radius: .25rem;
+                background-color: #28a745;
+                border-color: #28a745;
+                transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;">Activate</a>
+        </div>
+    </div>
+</div>
+{% endblock body %}

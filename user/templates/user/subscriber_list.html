@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block title %}
+Subscriber List
+{% endblock title %}
+{% block body %}
+<div class="row">
+    {% for subscriber in object_list %}
+    <div class="col-md-12 box preview-box">
+        <div class="row">
+            <div class="user-image col-md-3 box preview-box" style="margin-left: 10px; text-align: center;">
+                <div class="rounded" style="text-align: center;">
+                    <img src="{{ subscriber.profile.img.url }}" alt="User dp">
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="user-details box preview-box">
+                    <div class="box user-name" style="display: flex; justify-content: space-between;">
+                        <div>
+                            <b>User Name: </b>{{ subscriber.username }}
+                        </div>
+                    </div>
+                    <p> <b>Email: </b>{{ subscriber.email }} </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <h2 style="color: darkred">No subscribers yet</h2>
+    {% endfor %}
+</div>
+{% block pagination %}
+{{ block.super }}
+{% endblock pagination %}
+{% endblock body %}

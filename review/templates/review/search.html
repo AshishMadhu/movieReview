@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load markdownify %}
+{% load filters %}
+{% block title %}
+Search
+{% endblock title %}
+{% block body %}
+<h2>Search</h2>
+<form action="" method="get" class="form-inline">
+    <input type="search" name="q" id="" class="form-control mr-2" value="{{ query }}">
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
+{% if query %}
+<h3>Result from search query '{{ query }}' </h3>
+<ul class="list-unstyled search-results">
+    {% for hit in hits %}
+    <div class="row detail box preview-box detail-box">
+        <div class="col-md-3">
+            <div class="row">
+                <div class="col-sm-12 col-md-12 col-lg-12 rounded">
+                    <img src="{{ hit.poster_url }}" alt="Movie Poster">
+                    <p><b>Written by:</b> <a href="{% url 'user:profile' username=hit.username %}"> {% if user.username == hit.username %} You {% else %} {{ hit.username }} {% endif %}</a></p>
+                </div>
+                <br>
+            </div>
+        </div>
+
+        <div class="col-sm-9 col-md-9 col-lg-9">
+            <h2><a href="{% url 'review:manage' pk=hit.id %}">{{hit.name}}</a>
+                <div class="rating">
+                    <span class="badge badge-success">
+                        {% for i in hit.rating|times %}
+                        {% if i == 0 %}
+                        Rated:
+                        {% endif %}
+                        <span>☆</span>
+                        {% empty %}
+                        Start Rating
+                        {% endfor %}
+                    </span>
+                </div></h2>
+            <hr>
+            <p class="box">
+                {{ hit.movie_description | markdownify}}</p>
+        </div>
+    </div>
+    {% empty %}
+    <li>No results.</li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endblock body %}

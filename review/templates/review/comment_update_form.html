@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}
+{{ block.super }} - UpdateComment
+{% endblock title %}
+{% block body %}
+<form action="" method="post" class="col-md-8">
+    {% csrf_token %}
+    {{ form | crispy}}
+    <button type="submit" class="btn btn-success">Update</button>
+</form>
+{% block script %}
+<script>
+    window.onload = function() {
+        document.getElementsByTagName("textarea")[0].focus();
+    };
+</script>
+{% endblock script %}
+{% endblock body %}

@@ -1,0 +1,116 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{% block title %} movieReview{% endblock title %}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href=" {% static 'css/bootstrap.min.css' %} ">
+    <link rel="stylesheet" href=" {% static 'css/main.css' %} ">
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
+        <div class="container">
+            <a class="navbar-brand js-scroll-trigger" href="#page-top">movie<span class="r">R</span>eview</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+                aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+
+                        <form action="" method="get" class="form-inline">
+                            <input type="search" name="q" id="" class="form-control mr-2" value="{{ query }}">
+                            <button type="submit" class="btn btn-primary">Search</button>
+                        </form>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" href="{% url 'review:about' %}">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" href="{% url 'review:movieList' %}">MovieList</a>
+                    </li>
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" href="{% url 'user:logout' %}">Logout</a>
+                    </li>
+                    <li class="nav-item">
+                        {% if current_user %}
+                        <a class="nav-link js-scroll-trigger"
+                            href="{% url 'user:profile' username=current_user.username %}">Profile</a>
+                        {% else %}
+                        <a class="nav-link js-scroll-trigger"
+                            href="{% url 'user:profile' username=user.username %}">Profile</a>
+                        {% endif %}
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'review:post' %}" class="nav-link js-scroll-trigger">Post</a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" href="{% url 'user:login' %}">LogIn</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-custom">
+
+        {% if messages %}
+        <div>
+            <ul class="ul-messages">
+                {% for message in messages %}
+                <li class="alert alert-{{message.tags}}"> {{ message }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        {% if form_errors %}
+        {% for field, errors in form_errors.items %}
+        {% for error in errors %}
+        <div class="alert alert-danger"> {{ error }}</div>
+        {% endfor %}
+        {% endfor %}
+        {% endif %}
+
+        {% block body %}
+        {% block pagination %}
+        {% if is_paginated %}
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+            <li><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+            {% else %}
+            <li class="disabled"><span>&laquo;</span></li>
+            {% endif %}
+            {% for i in paginator.page_range %}
+            {% if page_obj.number == i %}
+            <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+            {% else %}
+            <li><a href="?page={{ i }}">{{ i }}</a></li>
+            {% endif %}
+            {% endfor %}
+            {% if page_obj.has_next %}
+            <li><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+            {% else %}
+            <li class="disabled"><span>&raquo;</span></li>
+            {% endif %}
+        </ul>
+        {% endif %}
+        {% endblock pagination %}
+        {% endblock body %}
+    </div>
+    <script src=" {% static '/js/bootstrap.min.js' %} "></script>
+    {% block script %}
+    {% endblock script %}
+</body>
+
+</html>

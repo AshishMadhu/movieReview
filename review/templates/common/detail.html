@@ -1,0 +1,82 @@
+{% load filters %}
+{% load markdownify %}
+{% load crispy_forms_tags %}
+{% if preview %}
+<div class="alert alert-warning">
+    To View the poster just choose the file agian.I know it is a bug but soon will fix it. Sorry of the inconvenience!!
+</div>
+{% endif %}
+<div class="row detail box preview-box detail-box">
+    <div class="col-md-3">
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-lg-12 rounded">
+                {% if preview %}
+                <img src="" alt="Poster">
+                {% else %}
+                <img src=" {% if object.poster %}{{ object.poster.url }}{% endif %} " alt="Movie Poster">
+                {% endif %}
+            </div>
+            <br>
+            <div class="col-sm-12 col-md-12 col-lg-12 rounded">
+                <b> Written by: </b>
+                {% if user %}
+                {% if user.username == object.user.username %}
+                <a href="{% url 'user:profile' username=object.user.username %}">You</a>
+                {% else %}
+                <a href="{% url 'user:profile' username=object.user.username %}">{{ object.user.username }}</a>
+                {% endif %}
+                {% else %}
+                <a href="{% url 'user:profile' username=object.user.username %}">{{ object.user.username }}</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-9 col-md-9 col-lg-9">
+        {% if list_view %}
+        <h2> <a href=" {% url 'review:manage' pk=object.id %} ">{{object.name}}</a>
+            <div class="rating">
+                <span class="badge badge-success">
+                    {% for i in object.ratting|times %}
+                    {% if i == 0 %}
+                    Rated:
+                    {% endif %}
+                    <span>☆</span>
+                    {% empty %}
+                    Start Rating
+                    {% endfor %}
+                </span>
+            </div>
+        </h2>
+        {% else %}
+        <h2>{{object.name}}
+            <div class="rating">
+                <span class="badge badge-success">
+                    {% for i in object.ratting|times %}
+                    {% if i == 0 %}
+                    Rated:
+                    {% endif %}
+                    <span>☆</span>
+                    {% empty %}
+                    Start Rating
+                    {% endfor %}
+                </span>
+            </div>
+        </h2>
+        {% endif %}
+        <hr>
+        <p class="box">
+            {{ object.description | markdownify}}
+            {% if not list_view %}
+            {% if user.is_authenticated %}
+            {% if not rated %}
+            <p><b class="alert alert-warning">You have not rated this moive!</b></p>
+            {% endif %}
+            <form method="post" action="{{ rating_form_url }}">
+                {% csrf_token %}
+                {{ rating_form | crispy}}
+                <button type="submit" class="btn btn-primary">Rate</button>
+            </form>
+            {% endif %}
+            {% endif %}
+    </div>
+</div>
