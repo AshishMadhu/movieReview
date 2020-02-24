@@ -6,7 +6,6 @@ from django.shortcuts import reverse
 from django.contrib.auth.models import User
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.mixins import LoginRequiredMixin
 
 class LoginView(auth_views.LoginView):
     def get_success_url(self):
